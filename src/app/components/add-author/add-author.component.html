@@ -1,0 +1,17 @@
+<div class="add-author-container">
+  <h2>Add New Author</h2>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="author-name">Author Name</label>
+      <input
+        id="author-name"
+        type="text"
+        [(ngModel)]="author.name"
+        name="name"
+        placeholder="Enter author name"
+        required
+      />
+    </div>
+    <button type="submit">Add Author</button>
+  </form>
+</div>

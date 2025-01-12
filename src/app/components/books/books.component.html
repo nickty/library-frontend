@@ -1,0 +1,29 @@
+<div class="books-container">
+    <h2>Book List</h2>
+    <div *ngIf="books.length > 0; else noBooks">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Published Year</th>
+            <th>Author Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let book of books; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.genre || 'N/A' }}</td>
+            <td>{{ book.publishedYear || 'N/A' }}</td>
+            <td>{{ book.author.firstName }} {{ book.author.lastName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noBooks>
+      <p>No books available.</p>
+    </ng-template>
+  </div>
+  
