@@ -32,6 +32,14 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/books`, book, { headers: this.getHeaders() });
   }
 
+  updateBook(bookId: number, bookData: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/books/${bookId}`, bookData);
+  }
+
+  deleteBook(bookId: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/books/${bookId}`);
+  }
+
 
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, credentials);

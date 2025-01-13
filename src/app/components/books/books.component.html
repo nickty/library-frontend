@@ -1,29 +1,89 @@
 <div class="books-container">
-    <h2>Book List</h2>
-    <div *ngIf="books.length > 0; else noBooks">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Published Year</th>
-            <th>Author Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let book of books; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ book.title }}</td>
-            <td>{{ book.genre || 'N/A' }}</td>
-            <td>{{ book.publishedYear || 'N/A' }}</td>
-            <td>{{ book.author.firstName }} {{ book.author.lastName }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <ng-template #noBooks>
-      <p>No books available.</p>
-    </ng-template>
+  <h2>Book List</h2>
+  <div *ngIf="books.length > 0; else noBooks">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Published Year</th>
+          <th>Author Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of books; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <span *ngIf="!editMode[book.id]; else editTitle">{{ book.title }}</span>
+            <ng-template #editTitle>
+              <input [(ngModel)]="book.title" />
+            </ng-template>
+          </td>
+          <td>
+            <span *ngIf="!editMode[book.id]; else editGenre">{{ book.genre || 'N/A' }}</span>
+            <ng-template #editGenre>
+              <input [(ngModel)]="book.genre" />
+            </ng-template>
+          </td>
+          <td>
+            <span *ngIf="!editMode[book.id]; else editYear">{{ book.publishedYear || 'N/A' }}</span>
+            <ng-template #editYear>
+              <input [(ngModel)]="book.publishedYear" />
+            </ng-template>
+          </td>
+          <td>{{ book.author.firstName }} {{ book.author.lastName }}</td>
+          <td>
+            <!-- Actions -->
+            <button *ngIf="!editMode[book.id]" (click)="enableEditMode(book.id)">Edit</button>
+            <button *ngIf="editMode[book.id]" (click)="updateBook(book)">Save</button>
+            <button *ngIf="editMode[book.id]" (click)="cancelEdit(book.id)">Cancel</button>
+            <button (click)="deleteBook(book.bookID)">Delete</button>
+            <button class="btn btn-primary btn-sm" (click)="openEditModal(book)">Edit</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  
+  <ng-template #noBooks>
+    <p>No books available.</p>
+  </ng-template>
+</div>
+
+
+<div class="modal" tabindex="-1" *ngIf="selectedBook">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Book</h5>
+        <button type="button" class="btn-close" (click)="selectedBook = null"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input id="title" type="text" class="form-control" [(ngModel)]="selectedBook.title" name="title" />
+          </div>
+          <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <input id="genre" type="text" class="form-control" [(ngModel)]="selectedBook.genre" name="genre" />
+          </div>
+          <div class="mb-3">
+            <label for="publishedYear" class="form-label">Published Year</label>
+            <input id="publishedYear" type="number" class="form-control" [(ngModel)]="selectedBook.publishedYear" name="publishedYear" />
+          </div>
+          <div class="mb-3">
+            <label for="author" class="form-label">Author Name</label>
+            <input id="author" type="text" class="form-control" [(ngModel)]="selectedBook.author" name="author" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="selectedBook = null">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
